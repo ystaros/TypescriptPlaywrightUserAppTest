@@ -33,7 +33,6 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['json', {  outputFile: 'reports/json-report/report.json' }],
-    // ['html', { open: 'never', outputDir: 'reports/html-report/' }],
     ['html', { outputFolder: 'reports/html-report/', open: 'never' }],
     ['junit', { outputFile: 'reports/junit-report/report.xml' }],
     ['@estruyf/github-actions-reporter'],
