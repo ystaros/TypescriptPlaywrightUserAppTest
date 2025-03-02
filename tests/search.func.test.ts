@@ -1,11 +1,11 @@
-import {test, expect, request, APIRequestContext} from "@playwright/test";
-import * as preconditions from "@preconditions/preconditions";
+import {test, expect, allureMeta} from "@base/base.test";
 import * as usersData from "@data/users.data";
 import {HomePage} from "@pages/home.page";
 import {SearchPage} from "@pages/search.page";
+import {description, epic, Severity, story, tags} from "allure-js-commons";
 
 test.describe('Should Search Users By Search Criteria', async () => {
-    let apiRequest: APIRequestContext;
+    // let apiRequest: APIRequestContext;
 
     // test('Search User With Unique First Name', async({ page }) => {
     //     const userJohn = users[0];
@@ -18,16 +18,19 @@ test.describe('Should Search Users By Search Criteria', async () => {
     //     expect(await searchPage.getTbodyRowCounts()).toBe(1);
     // })
 
-    test.beforeEach('Create API Request Context, Create Preconditions', async({ page }) => {
-        apiRequest = await request.newContext();
-
-        await preconditions.deleteUsers(apiRequest);
-        await preconditions.createUsers(apiRequest, usersData.users);
-
-        await page.goto('/');
+    test.beforeEach('Create API Request Context, Create Preconditions', async() => {
+        // apiRequest = await request.newContext();
+        // await preconditions.deleteUsers(apiRequest);
+        // await preconditions.createUsers(apiRequest, usersData.users);
+        await allureMeta(
+            epic('FUN: Search User.'),
+            story('FUN-SEARCH: Search for a User?Users using one or multiple criteria.'),
+            tags('FUN', 'SEARCH','UniqueFirstName'),
+            Severity.NORMAL
+        )
     })
 
-    test('Search User With Unique First Name - no POM', async({ page }) => {
+    test('Search User With Unique First Name - no POM', async({ createDB, page }) => {
         const userWithUniqueFirstName = usersData.users[0];
 
         const searchTab = page.getByRole('link', {name: 'Search', exact: true});
@@ -61,7 +64,12 @@ test.describe('Should Search Users By Search Criteria', async () => {
         expect(actualUserInfo[3]).toStrictEqual(userWithUniqueFirstName.age.toString());
     })
 
-    test('Search User With Unique First Name - POM v2', async({ page }) => {
+    test('Search User With Unique First Name - POM v2', async({ createDB, page }) => {
+        await allureMeta(
+            description('This test verifies that the "Search" tab is accessible, allows user input, ' +
+                'enables the search button upon valid input, and correctly displays the searched user’s details ' +
+                'in the results table.')
+        )
         const userWithUniqueFirstName = usersData.uniqueFirstNameUser;
         const expectedFirstName = userWithUniqueFirstName.firstName;
         const expectedLastName = userWithUniqueFirstName.lastName;
@@ -85,9 +93,9 @@ test.describe('Should Search Users By Search Criteria', async () => {
         expect(actualUserInfo[3]).toStrictEqual(expectedAge);
     })
 
-    test.afterEach('Close API request context', async () => {
-        await apiRequest.dispose();
-    })
+    // test.afterEach('Close API request context', async () => {
+    //     await apiRequest.dispose();
+    // })
 
 
 })
