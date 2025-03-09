@@ -1,4 +1,4 @@
-import {test as base} from "@playwright/test";
+import {test as base} from "@base/base.page";
 import * as preconditions from "@preconditions/preconditions";
 import * as usersData from "@data/users.data";
 
@@ -21,7 +21,7 @@ export const test = base.extend<MyFixtures>({
             await page.goto('/');
         })
         await use();
-    }, { auto: true }
+    }, { auto: true, title: "Precondition: Open base url." }
     ],
 
     createDB: [async({request}, use) => {
@@ -33,7 +33,7 @@ export const test = base.extend<MyFixtures>({
         await step('Precondition: Dispose request.', async () => {
           await request.dispose();
         });
-    }, {auto: false, scope: "test", title: "Precondition: Setup Data Base."}],
+    }, {auto: false, scope: "test"}],
 });
 
 export { expect } from '@playwright/test';
